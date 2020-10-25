@@ -49,16 +49,7 @@ public class JdbcUtils {
                     .collect(Collectors.joining(", ")));
 
             str.append(')');
-
-            /*
-            for (Field x : table.getDeclaredFields()) {
-                if (i++ == table.getDeclaredFields().length - 1) {
-                    str.append(x.getName() + ")");
-                } else {
-                    str.append(x.getName() + ",");
-                }
-            }
-            */
+            
             str.append(" VALUES(");
             str.append(Arrays.stream(table.getDeclaredFields())
                     .map(field -> data.get(field.getName()).toString())
@@ -67,24 +58,7 @@ public class JdbcUtils {
                     .collect(Collectors.joining(", ")));
 
             str.append(");");
-/*
-            int j = 0;
-            for (Field x : table.getDeclaredFields()) {
-                String currentField = data.get(x.getName()).toString();
-                String generatedData = null;
 
-                if (currentField.contains("'")) {
-                    generatedData = currentField.replace("'", "_");
-                    System.out.println(generatedData);
-                } else
-                    generatedData = currentField;
-
-                if (j++ == table.getDeclaredFields().length - 1) {
-                    str.append("\'" + generatedData + "\'" + ");");   // " VALUE( \'toto', 'tata', 'O\'ckel'
-                } else {
-                    str.append("\'" + generatedData + "\'" + ",");
-                }
-            }*/
             stmt.executeUpdate(str.toString());
             logger.info("Records inserted successfully...");
         } catch (PSQLException se) {
