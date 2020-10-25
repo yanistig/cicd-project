@@ -1,4 +1,4 @@
-#CI/CD Test Project
+# CI/CD Test Project
 
 ### Description
 This project use JDBC to connect with the postgres Database and then generate data with Faker to insert it into the corresponding table.
