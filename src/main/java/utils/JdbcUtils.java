@@ -44,18 +44,36 @@ public class JdbcUtils {
 
             int i = 0;
             str.append("INSERT INTO " + table.getSimpleName() + " (");
-            str.append(Arrays.stream(table.getDeclaredFields())
-                    .map(field -> field.getName())
-                    .collect(Collectors.joining(", ")));
+
+            for (Field x : table.getDeclaredFields()) {
+                if (i++ == table.getDeclaredFields().length - 1) {
+                    str.append(x.getName() + ")");
+                } else {
+                    str.append(x.getName() + ",");
+                }
+            }
 
             str.append(')');
-            
+
             str.append(" VALUES(");
-            str.append(Arrays.stream(table.getDeclaredFields())
-                    .map(field -> data.get(field.getName()).toString())
-                    .map(field -> field.replace("'", "_"))
-                    .map(field -> "'" + field + "'")
-                    .collect(Collectors.joining(", ")));
+
+            int j = 0;
+            for (Field x : table.getDeclaredFields()) {
+                String currentField = data.get(x.getName()).toString();
+                String generatedData = null;
+
+                if (currentField.contains("'")) {
+                    generatedData = currentField.replace("'", "_");
+                    System.out.println(generatedData);
+                } else
+                    generatedData = currentField;
+
+                if (j++ == table.getDeclaredFields().length - 1) {
+                    str.append("\'" + generatedData + "\'" + ");");   // " VALUE( \'toto', 'tata', 'O\'ckel'
+                } else {
+                    str.append("\'" + generatedData + "\'" + ",");
+                }
+            }
 
             str.append(");");
 
